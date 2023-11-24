@@ -21,17 +21,17 @@ def gcd(a,b):
         return gcd(b,a%b)
     
 def Z_q_star(q):
-    Z_q_star = []
+    Z_q_star_list = []
     for i in range(1,q):
         if gcd(i,q)==1:
-            Z_q_star.append(i)
-    return Z_q_star
+            Z_q_star_list.append(i)
+    return Z_q_star_list
 
 #find all w such that order of w is n  and w^j != 1 for any 1<=j < n
 def primitive_roots(q,n):
-    Z_q_star = Z_q_star(q)
+    Z_q_star_list = Z_q_star(q)
     w_list = []
-    for w in Z_q_star:
+    for w in Z_q_star_list:
         if w**n % q == 1 and all(w**j % q != 1 for j in range(1, n)):
             w_list.append(w)
     return w_list
@@ -106,6 +106,8 @@ def convertToNTT_butterfly(f, w, q):
             r_1.append((f[i] + f[i+n//2]) % q)
             r_2.append((f[i] - f[i+n//2]) * pow(w, i, q) % q)
 
+        # print ("r_1 = ",r_1)
+        # print ("r_2 = ",r_2)
         r_1 = convertToNTT_butterfly(r_1, (w**2)%q, q)
         r_2 = convertToNTT_butterfly(r_2, (w**2)%q, q)
         r = r_1 + r_2
