@@ -1,9 +1,8 @@
 # NTT
 To run the code, run the following commands:
 ```
-cd cooleyTukey
-python3 run_script.py minusoneRing.py input.txt
-python3 run_script.py plusoneRing.py input.txt
+cd codes
+python3 run_script.py "./minusone/recursiveCT.py" "./inputFiles/minusOne1.txt"
 
 ```
 
