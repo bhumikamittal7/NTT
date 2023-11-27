@@ -127,8 +127,9 @@ ntt = convertToNTT(f,q,w)
 print ("NTT(f(x)) = ",ntt)
 
 ntt_butterfly = convertToNTT_butterfly(f,w,q)
-ntt_butterfly = bit_reversal(ntt_butterfly)
 print ("NTT(f(x)) using butterfly = ",ntt_butterfly)
+ntt_butterfly = bit_reversal(ntt_butterfly)
+print ("NTT(f(x)) after bit reversal = ",ntt_butterfly)
 
 assert ntt==ntt_butterfly
 print ("Lessgoo!")
