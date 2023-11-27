@@ -8,7 +8,7 @@ python3 run_script.py "./plusOne/minus2nRing.py" "./inputFiles/minus2n1.txt"
 
 ```
 
-To see the middle steps of butterfly diagram, uncomment the print statements in the butterfly function in main.py (line 109-110)
+To see the middle steps of butterfly diagram, uncomment the print statements in the butterfly function in recursiveCT.py (line 31-32)
 
 ## Next Steps:
 - [ ] Implement NTT for \mathbb{Z}[x]/(x^n+1) ring -- Isomorphism method
