@@ -3,6 +3,8 @@ To run the code, run the following commands:
 ```
 cd codes
 python3 run_script.py "./minusone/recursiveCT.py" "./inputFiles/minusOne1.txt"
+python3 run_script.py "./minusone/recursiveCT.py" "./inputFiles/minus2n.txt"
+python3 run_script.py "./plusOne/minus2nRing.py" "./inputFiles/minus2n1.txt"
 
 ```
 

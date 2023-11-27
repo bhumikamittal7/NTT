@@ -26,9 +26,6 @@ def convertToNTT_EvenOddbutterfly(f, w, q):
         for i in range(n//2):
             r_1.append(f[2*i])
             r_2.append(f[2*i+1])
-        
-        print ("r_1 = ",r_1)
-        print ("r_2 = ",r_2)
 
         r_1 = convertToNTT_EvenOddbutterfly(r_1, (w**2)%q, q)
         r_2 = convertToNTT_EvenOddbutterfly(r_2, (w**2)%q, q)
@@ -42,7 +39,7 @@ def convertToNTT_EvenOddbutterfly(f, w, q):
         return r
 
 #============================ print and compare ====================================#
-ntt = convertToNTT(f,q,w)
+ntt = convertToNTT(f,q,w,n)
 print ("NTT(f(x)) = ",ntt)
 
 ntt_butterfly = convertToNTT_EvenOddbutterfly(f,w,q)
