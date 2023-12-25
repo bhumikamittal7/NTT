@@ -16,6 +16,9 @@ print ("w = ",w)
 print ("f(x) = ",f)
 
 #============================ Iterative GS implementation ====================================#
-#bit reverse the input
-f = bit_reversal(f)
-print ("f(x) after bit reversal = ",f)
+'''
+Concept:
+Define: phi_8 = w, phi_4 = w^2, phi_2 = w^4, phi_1 = w^8
+    1. Bit reveral the input
+    2. 
+'''
