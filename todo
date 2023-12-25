@@ -1,0 +1,6 @@
+for both the rings, do the following:
+
+1. take f and g
+2. compute NTT(f) and NTT(g) - this is done using CT butterfly
+3. compute NTT(f) * NTT(g) - this is done using pointwise multiplication
+4. compute inverse NTT(NTT(f) * NTT(g)) - this is done using GS butterfly

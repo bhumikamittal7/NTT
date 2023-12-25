@@ -1,6 +1,7 @@
 import random
 import math
 #=========== helper functions =================================================#
+#checks if the number is prime or not
 def is_prime(p):
     if p==1:
         return False
@@ -9,18 +10,21 @@ def is_prime(p):
             return False
     return True
 
+#generates a random prime number between 1 and 500
 def generate_random_prime():
     while True:
         p = random.randint(1,500)
         if is_prime(p):
             return p
 
+#finds the gcd of two numbers
 def gcd(a,b):
     if b==0:
         return a
     else:
         return gcd(b,a%b)
-    
+
+#gives the list of all elements in Z_q_star  
 def Z_q_star(q):
     Z_q_star_list = []
     for i in range(1,q):
@@ -37,6 +41,7 @@ def primitive_roots(q,n):
             w_list.append(w)
     return w_list
 
+#generates a random polynomial of degree n-1 with coefficients in Z_q
 def random_poly(n,q):
     f = []
     for i in range(n):
@@ -44,7 +49,7 @@ def random_poly(n,q):
     return f
 
 #============================ Taking Params ====================================#
-
+#take q such that q = 1 mod n and q is a prime number
 def take_q(n):
     choice = input("Do you want to enter a q? (1/0): ")
     if choice=='1':
@@ -60,6 +65,7 @@ def take_q(n):
     assert q%n==1
     return q
 
+#take w such that w^n = 1 mod q and w is a primitive root of q
 def take_w(q,n):
     choice2 = input("Do you want to enter a w? (1/0): ")
     if choice2=='1':
@@ -72,6 +78,7 @@ def take_w(q,n):
 
     return w
 
+#take f such that f is a polynomial of degree n-1 with coefficients in Z_q
 def take_f(n,q):
     choice3 = input("Do you want to enter a polynomial? (1/0): ")
     if choice3=='1':
@@ -83,6 +90,7 @@ def take_f(n,q):
     return f
 
 #======================= Bit Reversal ==============================================#
+#bit reversal - takes a list f and returns a list f_rev such that f_rev[i] = f[bit_reversal(i)]
 def bit_reversal(f):
     #k should be such that 2^k = n
     # print ("f = ",f)
@@ -99,6 +107,7 @@ def bit_reversal(f):
     return f_rev
 
 #============================ Normal NTT ====================================#
+#valdermonde matrix method
 def convertToNTT(f, q, w, n):
     ntt = []
     for i in range(n):
