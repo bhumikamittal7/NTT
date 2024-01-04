@@ -1,5 +1,5 @@
 from help import *
-from nttCT import *
+from main.RecursiveCooleyTukey import *
 from inttGS import *
 
 #============================ take params ====================================#

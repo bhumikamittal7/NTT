@@ -4,6 +4,7 @@ from help import *
 def inttGS(NTTf, q, w):
     a = bit_reversal(NTTf)
     
+    
 
     return a
 
