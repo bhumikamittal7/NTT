@@ -136,3 +136,12 @@ def bit_reversal(f):
         f_rev[i] = f[int(bin(i)[2:].zfill(k)[::-1],2)]
         # print ("i", i,"reversed i", int(bin(i)[2:].zfill(k)[::-1],2), "f_rev[i] = ",f_rev[i])
     return f_rev
+
+#============================ psi table ====================================#
+#we generate a table of psi values for a given psi, q and n containing psi^i for i = 0 to n-1
+def generate_psi_table(q, n, psi):
+    psi_table = []
+    psi_table.append(1)
+    for i in range(1,n):
+        psi_table.append((psi_table[i-1]*psi)%q)
+    return psi_table
