@@ -1,6 +1,5 @@
 import random
 import math
-
 #=========== helper functions =================================================#
 #checks if the number is prime or not
 def is_prime(p):
@@ -42,27 +41,12 @@ def primitive_roots(q,n):
             w_list.append(w)
     return w_list
 
-#find all \psi such that \psi^2 = w mod q and \psi^n = -1 mod q
-def primitive_root_2n(q,n,w):
-    Z_q_star_list = Z_q_star(q)
-    psi_list = []
-    for psi in Z_q_star_list:
-        if psi**2 % q == w and psi**n % q == -1:
-            psi_list.append(psi)
-    return psi_list
-
 #generates a random polynomial of degree n-1 with coefficients in Z_q
 def random_poly(n,q):
     f = []
     for i in range(n):
         f.append(random.randint(0,q-1))
     return f
-
-#find the inverse of an element in Z_q
-def inverse(a,q):
-    for i in range(1,q):
-        if (a*i)%q==1:
-            return i
 
 #============================ Taking Params ====================================#
 #take q such that q = 1 mod n and q is a prime number
@@ -95,20 +79,6 @@ def take_w(q,n):
 
     return w
 
-# take psi such that psi^2 = w mod q and psi^n = -1 mod q
-def take_psi(q,n,w):
-    choice2 = input("Do you want to enter a psi? (1/0): ")
-    if choice2=='1':
-        psi = int(input("Enter psi: "))
-    else:
-        psi_list = primitive_root_2n(q,n,w)
-        psi = random.choice(psi_list)
-
-    assert (psi**2)%q==w
-    assert (psi**n)%q==-1
-
-    return psi
-
 #take f such that f is a polynomial of degree n-1 with coefficients in Z_q
 def take_poly(n,q):
     choice3 = input("Do you want to enter a polynomial? (1/0): ")
@@ -136,3 +106,35 @@ def bit_reversal(f):
         f_rev[i] = f[int(bin(i)[2:].zfill(k)[::-1],2)]
         # print ("i", i,"reversed i", int(bin(i)[2:].zfill(k)[::-1],2), "f_rev[i] = ",f_rev[i])
     return f_rev
+
+#============================ Direct NTT ====================================#
+#valdermonde matrix method
+def convertToNTT(f, q, w, n):
+    ntt = []
+    for i in range(n):
+        ntt.append(0)
+        #we need to calculate f(w^i) for i = 0 to n-1 and store it in ntt[i]
+        for j in range(n):
+            ntt[i] += f[j]*(w**(i*j))
+        ntt[i] = ntt[i]%q
+    return ntt
+
+#============================ Inverse NTT ====================================#
+#find the inverse of an element in Z_q
+def inverse(a,q):
+    for i in range(1,q):
+        if (a*i)%q==1:
+            return i
+
+def convertToINTT(ntt, q, w, n):
+    nInverse = inverse(n,q)
+    print ("nInverse = ",nInverse)
+    wInverse = inverse(w,q)
+    print ("wInverse = ",wInverse)
+    intt = [0]*n
+    for i in range(n):
+        intt[i] = nInverse*ntt[i] % q
+    # print ("intt = ",intt)
+    intt = convertToNTT(intt,q,wInverse,n)
+    return intt
+

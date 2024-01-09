@@ -1,6 +1,6 @@
 from help import *
-from main.RecursiveCooleyTukey import *
-from inttGS import *
+from main.RecursiveCT import *
+from main.IterativeGS import *
 
 #============================ take params ====================================#
 k = int(input("Enter any k such that n = 2^k: "))
@@ -40,8 +40,8 @@ def pointwise_mult(f,g,q):
     return fg
 
 #============================ NTT TEST ====================================#
-NTTf = nttCT(f,w,q)
-NTTg = nttCT(g,w,q)
+NTTf = recursiveCT(f,w,q)
+NTTg = recursiveCT(g,w,q)
 
 print ("NTT(f(x)) = ",NTTf)
 print ("NTT(g(x)) = ",NTTg)
@@ -49,7 +49,7 @@ print ("NTT(g(x)) = ",NTTg)
 NTTfg = pointwise_mult(NTTf,NTTg,q)
 print ("NTT(f(x))*NTT(g(x)) = ",NTTfg)
 
-fg = inttGS(NTTfg,q,w)
+fg = iterativeGS(NTTfg,q,w)
 print ("f(x)*g(x) = ",fg)
 
 fg1 = normal_mult(f,g,q)
