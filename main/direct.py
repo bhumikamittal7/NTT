@@ -46,7 +46,7 @@ def negacycNTT(f, q, psi, n):
     for j in range(n):
         ntt.append(0)
         for i in range(n):
-            ntt[j] += f[i]*(psi**((2*i*j)+1))
+            ntt[j] += f[i]*(psi**((2*i*j)+i))
         ntt[j] = ntt[j]%q
     return ntt
 
@@ -55,13 +55,13 @@ def negacycINTT(ntt, q, psi, n):
     nInverse = inverse(n,q)
     print ("nInverse = ",nInverse)
     psiInverse = inverse(psi,q)
-    print ("wInverse = ",psiInverse)
+    print ("psiInverse = ",psiInverse)
 
     intt = []
     for i in range(n):
         intt.append(0)
         for j in range(n):
-            intt[i] += ntt[j]*(psiInverse**((2*i*j)+j))
+            intt[i] += ntt[j]*(psiInverse**((2*i*j)+i))
         intt[i] = (intt[i]*nInverse)%q
     return intt
 
@@ -74,3 +74,5 @@ def negacycCon(f,g, psi, q, n):
         hntt.append((fntt[i]*gntt[i])%q)
     h = negacycINTT(hntt,q,psi,n)
     return h
+
+# print (negacycINTT([11, 16, 15, 13], 17, 15, 4))

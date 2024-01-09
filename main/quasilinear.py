@@ -26,11 +26,11 @@ def recCT(f, w, q):
            r[i] = (r_1[i] + w**i*r_2[i])%q
            r[i+n//2] = (r_1[i] - w**i*r_2[i])%q
         
-        r = bit_reversal(r)
         return r
     
 #============================ Iterative CT function ====================================#
-def iterCT(f, psi, q):
+def iterCT(a, psi, q):
+    f = a.copy()
     n = len(f)
     assert (q%(2*n))==1
 
@@ -73,10 +73,13 @@ def recGS(f, w, q):
         r_1 = recGS(r_1, (w**2)%q, q)
         r_2 = recGS(r_2, (w**2)%q, q)
         r = r_1 + r_2
+
+        r = bit_reversal(r)
         return r
     
 #============================ Iterative GS ====================================#
-def iterGS(ntt, psi, q):
+def iterGS(nttF, psi, q):
+    ntt = nttF.copy()
     n = len(ntt)
     ntt = bit_reversal(ntt)
     assert (q%(2*n))==1
@@ -103,3 +106,15 @@ def iterGS(ntt, psi, q):
     for j in range(n):
         ntt[j] = (ntt[j]*inverse(n, q))%q
     return ntt
+
+#============================ Mult ====================================#
+def mult(f, g, q, psi, n):
+    fntt = iterCT(f, psi, q)
+    gntt = iterCT(g, psi, q)
+    print ("fntt = ",fntt)
+    print ("gntt = ",gntt)
+    hntt = [0]*n
+    for i in range(n):
+        hntt[i] = fntt[i]*gntt[i] % q
+    h = iterGS(hntt, psi, q)
+    return h

@@ -18,7 +18,12 @@ def run_program_with_input(py_file, input_file):
         
         if process.returncode == 0:
             print("Program executed successfully.")
-            print("Output:\n", output)
+        
+            output = output.split("\n",1)[1]
+            with open("output.txt", 'w') as output_data:
+                output_data.write(output) 
+                
+            print("Output written to output.txt")           
         else:
             print("Error occurred while running the program:")
             print("Output:\n", output)

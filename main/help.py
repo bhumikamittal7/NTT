@@ -55,11 +55,7 @@ def primitive_root_2n(q,n,w):
         if psi**2 % q == w and psi**n % q == q-1:
             psi_list.append(psi)
     print ("psi_list = ",psi_list)
-    if len(psi_list)==0:
-        print ("No psi found")
-        return None
-    else:
-        return psi_list
+    return psi_list
 
 #generates a random polynomial of degree n-1 with coefficients in Z_q
 def random_poly(n,q):
