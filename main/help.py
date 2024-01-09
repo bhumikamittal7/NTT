@@ -35,21 +35,31 @@ def Z_q_star(q):
 
 #find all w such that order of w is n and w^j != 1 for any 1<=j < n
 def primitive_roots(q,n):
-    Z_q_star_list = Z_q_star(q)
+    Z_q_list = []
+    for i in range(1,q):
+        Z_q_list.append(i)
     w_list = []
-    for w in Z_q_star_list:
+    for w in Z_q_list:
         if w**n % q == 1 and all(w**j % q != 1 for j in range(1, n)):
             w_list.append(w)
+    print ("w_list = ",w_list)
     return w_list
 
 #find all \psi such that \psi^2 = w mod q and \psi^n = -1 mod q
 def primitive_root_2n(q,n,w):
-    Z_q_star_list = Z_q_star(q)
+    Z_q_list = []
+    for i in range(1,q):
+        Z_q_list.append(i)
     psi_list = []
-    for psi in Z_q_star_list:
-        if psi**2 % q == w and psi**n % q == -1:
+    for psi in Z_q_list:
+        if psi**2 % q == w and psi**n % q == q-1:
             psi_list.append(psi)
-    return psi_list
+    print ("psi_list = ",psi_list)
+    if len(psi_list)==0:
+        print ("No psi found")
+        return None
+    else:
+        return psi_list
 
 #generates a random polynomial of degree n-1 with coefficients in Z_q
 def random_poly(n,q):
@@ -105,7 +115,7 @@ def take_psi(q,n,w):
         psi = random.choice(psi_list)
 
     assert (psi**2)%q==w
-    assert (psi**n)%q==-1
+    assert (psi**n)%q==q-1
 
     return psi
 
