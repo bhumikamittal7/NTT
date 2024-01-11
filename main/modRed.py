@@ -1,14 +1,28 @@
 from help import *
 
+def log2(x):
+    return (x.bit_length() - 1)
+
 #function k-RED
-def kRED(C):
-    pass
+def kRED(C, n, q):
+    m = log2(n)+1
+    k = (q-1)//(2**m)
+    C0 = C%(2**m)
+    C1 = C//(2**m)
+    x = k*C0 - C1
+    return x
+
 
 #function k-RED-2x
-def kRED2x(C):
-    pass
-
-
+def kRED2x(C, n, q):
+    m = log2(n)+1
+    k = (q-1)//(2**m)
+    C0 = C%(2**m)
+    C1 = (C//(2**m))%(2**m)
+    C2 = C//(2**(2*m))
+    y = (((k**2)*C0) - (k*C1) + C2)
+    return y
+    
 #modified ntt
 def modifiedNTT(a, psi, q):
     f = a.copy()
