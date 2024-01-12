@@ -20,8 +20,12 @@ def run_program_with_input(py_file, input_file):
             print("Program executed successfully.")
         
             output = output.split("\n",1)[1]
-            with open("output.txt", 'w') as output_data:
-                output_data.write(output) 
+            if input_file == "input4.txt":
+                with open("output4.txt", 'w') as output_data:
+                    output_data.write(output) 
+            if input_file == "input8.txt":
+                with open("output8.txt", 'w') as output_data:
+                    output_data.write(output)
                 
             print("Output written to output.txt")           
         else:
