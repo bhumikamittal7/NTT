@@ -10,5 +10,6 @@ The `main.py` file in the `main` folder contains the implementation of the NTT a
 
 ```
 cd main
-python3 run_script.py "main.py" "input.txt"
+python3 run_script.py "main.py" "input8.txt"
+python3 run_script.py "main.py" "input4.txt"
 ```
