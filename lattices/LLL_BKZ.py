@@ -42,53 +42,8 @@ print("q =", q)
 A1 = random_matrix(q, n, n)
 A2 = random_matrix(q, n, m - n)
 
-# Create block matrix A
-A = block_matrix(A1, A2)
-print("Number of rows of A (n):", A.shape[0])
-print("Number of columns of A (m):", A.shape[1])
+print ("A1 =")
+print (A1)
 
-# Calculate the inverse of A1
-A1_inverse = matrix_inverse(A1, q)
-# Print A1_inverse if needed
-# print(A1_inverse)
-
-# Calculate H1
-H1 = -np.dot(A1_inverse, A2)
-H1 = Matrix(H1).lift()
-
-# Calculate H2
-H2 = q * np.identity(n)
-H2 = Matrix(H2).lift()
-
-# Calculate H3
-H3 = np.identity(m - n)
-H3 = Matrix(H3).lift()
-
-# Calculate H4
-H4 = np.zeros((n, n), dtype=int)
-H4 = Matrix(H4).lift()
-
-# Augment matrices to form H_upper and H_lower
-H_upper = H1.augment(H2)
-H_lower = H3.augment(H4)
-
-# Stack H_upper and H_lower to form H
-H = H_upper.stack(H_lower)
-print("Number of rows of H (m):", H.nrows())
-print("Number of columns of H (m):", H.ncols())
-# Print H if needed
-# print(H)
-
-# Convert H to a dense matrix
-H_new = Matrix(H)
-
-# Perform LLL reduction
-reduced_H, _ = H_new.transpose().LLL()
-
-# Print the results if needed
-# print("Original H:")
-# print(H_new)
-# print('---------------------------')
-# print("Reduced H:")
-# print(reduced_H)
-# print(reduced_H[0])
+print ("A2 =")
+print (A2)
