@@ -52,6 +52,9 @@ class PolynomialModRq:
 
     def get_coefficients(self):
         return self.coefficients
+    
+    def to_bytes(self):
+        return bytes(self.coefficients)
 
     def __str__(self):
         return " + ".join(f"{coeff}x^{i}" for i, coeff in enumerate(self.coefficients) if coeff != 0)
