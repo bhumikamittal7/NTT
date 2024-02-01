@@ -41,7 +41,7 @@ def printParams1():
 def matrixVectorMult(a, s1, q, n):
     as1 = []
     for i in range(len(a)):
-        row = PolynomialModRq([0], q, n)
+        row = PolynomialModRq([0]*len(a[0]), q, n)
         for j in range(len(a[0])):
             row.add(a[i][j].multiply(s1[j]))
         as1.append(row)
@@ -61,9 +61,9 @@ t = addT(as1, s2, q, n)
 
 w = matrixVectorMult(a, y, q, n)
 # print("w = \n", w)
-wCopy = w.copy()
-w_dash = [pol.get_coefficients() for pol in wCopy]
-print("w_dash = \n", w_dash)
+for i in range(len(w)):
+    w[i] = w[i].get_coefficients()
+print("w = \n", w)
 #===============================================================================
 #generate message msg such that msg \in {0,1}^*
 def generateMsg():
