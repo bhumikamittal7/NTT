@@ -1,15 +1,18 @@
 from helper import *
 #===============================================================================
-q = 2**23 - 2**13 + 1
+# q = 2**23 - 2**13 + 1
+q = 17
 n = 5
 k = 4
 l = 4
 eta = 2
-d = 14
-tau = 39
-beta = 78
-gamma_1 = 2**17
-phi = 1753
+# d = 14
+d = 2
+# tau = 39
+# beta = 78
+# gamma_1 = 2**17
+gamma_1 = 11
+# phi = 1753
 #===============================================================================
 a = generateMatrix(k, l, q, n)
 s1 = S_eta(eta, l, n)
@@ -22,8 +25,18 @@ def printParams1():
 
     print("A = \n", a)
     print("===================================================")
+    #print coefficients of each polynomial in a
+    for i in range(len(a)):
+        for j in range(len(a[0])):
+            print("a[",i,"][",j,"] = ", a[i][j].get_coefficients())
+    print("===================================================")
+
 
     print("s1 = \n",s1)
+    print("===================================================")
+    #print coefficients of each polynomial in s1
+    for i in range(len(s1)):
+        print("s1[",i,"] = ", s1[i].get_coefficients())
     print("===================================================")
 
     print("s2 = \n",s2)
@@ -32,7 +45,7 @@ def printParams1():
     print("y = \n",y)
     print("===================================================")
     return
-# printParams1()
+printParams1()
 #===============================================================================
 #multiply a by s1 (a is a matrix of polynomials, s1 is a vector of polynomials)
 #dim of s1 = l x1
@@ -41,7 +54,7 @@ def printParams1():
 def matrixVectorMult(a, s1, q, n):
     as1 = []
     for i in range(len(a)):
-        row = PolynomialModRq([0]*len(a[0]), q, n)
+        row = PolynomialModRq([0]*n, q, n)
         for j in range(len(a[0])):
             row.add(a[i][j].multiply(s1[j]))
         as1.append(row)
@@ -57,13 +70,11 @@ def addT(as1, s2, q, n):
 
 t = addT(as1, s2, q, n)
 
-# print("t = \n", t)
+print("t = \n", t)
 
 w = matrixVectorMult(a, y, q, n)
-# print("w = \n", w)
-for i in range(len(w)):
-    w[i] = w[i].get_coefficients()
 print("w = \n", w)
+# print(as1[0].get_coefficients())
 #===============================================================================
 #generate message msg such that msg \in {0,1}^*
 def generateMsg():
@@ -73,7 +84,7 @@ def generateMsg():
     return msg
 
 msg = generateMsg()
-# print("msg = \n", msg)
+print("msg = \n", msg)
 #===============================================================================
 def w_upper(w, d):
     #each entry in w is a polynomial which can be represented as a list of coefficients
@@ -101,7 +112,7 @@ def hashMsg(w, msg):
 scalar = hashMsg(w, msg)
 scalar = scalar.hexdigest()
 
-# print("c = ", scalar)
+print("c = ", scalar)
 
 #convert c into a binary string
 def hexToBinary(c):
@@ -116,7 +127,7 @@ def binaryToInt(binary):
     return int(binary, 2)
 
 c = binaryToInt(binary)
-# print("binary = ", c)
+print("binary = ", c)
 
 #===============================================================================
 def scalarVectorMult(scalar, s1, q, n):
@@ -145,5 +156,5 @@ def addVectors(cs1, y_dash, q, n):
     return z
 
 z = addVectors(cs1, y_dash, q, n)
-# print("z = \n", z)
+print("z = \n", z)
 #===============================================================================
