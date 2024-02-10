@@ -13,6 +13,7 @@
 #if DILITHIUM_MODE == 2
 #define K 4
 #define L 4
+#define LDASH (N*L)
 #define ETA 2
 #define TAU 39
 #define BETA 78

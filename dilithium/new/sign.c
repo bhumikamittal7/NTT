@@ -7,6 +7,7 @@
 #include "randombytes.h"
 #include "symmetric.h"
 #include "fips202.h"
+#include "zmod.h"
 
 /*************************************************
 * Name:        crypto_sign_keypair
@@ -24,9 +25,13 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   uint8_t seedbuf[2*SEEDBYTES + CRHBYTES];
   uint8_t tr[SEEDBYTES];
   const uint8_t *rho, *rhoprime, *key;
-  polyvecl mat[K];
+  polyvecl mat1[K];
+  zmodq_matrix mat2[N];
   polyvecl s1, s1hat;
   polyveck s2, t1, t0;
+  polyveck1 s2dash, t1dash;
+  polyvec1 s3, t2;
+  
 
   /* Get randomness for rho, rhoprime and key */
   randombytes(seedbuf, SEEDBYTES);
@@ -36,21 +41,57 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   key = rhoprime + CRHBYTES;
 
   /* Expand matrix */
-  polyvec_matrix_expand(mat, rho);
+  polyvec_matrix_expand(mat1, rho);
+  uniform_zmodq_elements(mat2, N, LDASH);
 
-  /* Sample short vectors s1 and s2 */
+  /* Sample short vectors s1 and s2dash and s3 */
   polyvecl_uniform_eta(&s1, rhoprime, 0);
-  polyveck_uniform_eta(&s2, rhoprime, L);
+  // polyveck_uniform_eta(&s2, rhoprime, L);
+  polyveck1_uniform_eta(&s2dash, rhoprime, L);
+  polyvec1_uniform_eta(&s3, rhoprime, L);
+
+  // merge s2dash and s3 into s2
+  for(int i = 0; i < K-1; i++) {
+    s2.vec[i] = s2dash.vec[i];
+  }
+  s2.vec[K-1] = s3.vec[0];
 
   /* Matrix-vector multiplication */
   s1hat = s1;
   polyvecl_ntt(&s1hat);
-  polyvec_matrix_pointwise_montgomery(&t1, mat, &s1hat);
-  polyveck_reduce(&t1);
-  polyveck_invntt_tomont(&t1);
+  polyvec_matrix_pointwise_montgomery(&t1dash, mat1, &s1hat);
+  polyveck_reduce(&t1dash);
+  polyveck_invntt_tomont(&t1dash);
 
   /* Add error vector s2 */
-  polyveck_add(&t1, &t1, &s2);
+  polyveck_add(&t1dash, &t1dash, &s2dash);
+
+  /* Matrix-vector multiplication  */
+  // multiply mat2 and cof_poly(s1) and add to cof_poly(s3)
+  int32_t** s1_cof = cof_poly(s1, LDASH);
+  int32_t** s3_cof = cof_poly(s3, N);
+  int32_t** s1_times_mat2 = (int32_t**)malloc(N * sizeof(int32_t*));
+  for(int i = 0; i < N; i++) {
+    s1_times_mat2[i] = (int32_t*)malloc(LDASH * sizeof(int32_t));
+    for(int j = 0; j < LDASH; j++) {
+      s1_times_mat2[i][j] = 0;
+      for(int k = 0; k < LDASH; k++) {
+        s1_times_mat2[i][j] += s1_cof[k][0] * mat2[i].coeffs[k];
+      }
+    }
+  }
+  for(int i = 0; i < N; i++) {
+    s3_cof[i][0] += s1_times_mat2[i][0];
+  }
+  for(int i = 0; i < N; i++) {
+    t2.vec[0].coeffs[i] = s3_cof[i][0];
+  }
+
+  // merge t1dash and t2 into t1
+  for(int i = 0; i < K-1; i++) {
+    t1.vec[i] = t1dash.vec[i];
+  }
+  t1.vec[K-1] = t2.vec[0];
 
   /* Extract t1 and write public key */
   polyveck_caddq(&t1);
@@ -87,7 +128,7 @@ int crypto_sign_signature(uint8_t *sig,
   uint8_t seedbuf[3*SEEDBYTES + 2*CRHBYTES];
   uint8_t *rho, *tr, *key, *mu, *rhoprime;
   uint16_t nonce = 0;
-  polyvecl mat[K], s1, y, z;
+  polyvecl mat1[K], s1, y, z;
   polyveck t0, s2, w1, w0, h;
   poly cp;
   keccak_state state;
@@ -113,7 +154,7 @@ int crypto_sign_signature(uint8_t *sig,
 #endif
 
   /* Expand matrix and transform vectors */
-  polyvec_matrix_expand(mat, rho);
+  polyvec_matrix_expand(mat1, rho);
   polyvecl_ntt(&s1);
   polyveck_ntt(&s2);
   polyveck_ntt(&t0);
@@ -125,7 +166,7 @@ rej:
   /* Matrix-vector multiplication */
   z = y;
   polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
+  polyvec_matrix_pointwise_montgomery(&w1, mat1, &z);
   polyveck_reduce(&w1);
   polyveck_invntt_tomont(&w1);
 
@@ -234,7 +275,7 @@ int crypto_sign_verify(const uint8_t *sig,
   uint8_t c[SEEDBYTES];
   uint8_t c2[SEEDBYTES];
   poly cp;
-  polyvecl mat[K], z;
+  polyvecl mat1[K], z;
   polyveck t1, w1, h;
   keccak_state state;
 
@@ -257,10 +298,10 @@ int crypto_sign_verify(const uint8_t *sig,
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
   poly_challenge(&cp, c);
-  polyvec_matrix_expand(mat, rho);
+  polyvec_matrix_expand(mat1, rho);
 
   polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
+  polyvec_matrix_pointwise_montgomery(&w1, mat1, &z);
 
   poly_ntt(&cp);
   polyveck_shiftl(&t1);

@@ -158,6 +158,29 @@ void polyveck_uniform_eta(polyveck *v, const uint8_t seed[CRHBYTES], uint16_t no
     poly_uniform_eta(&v->vec[i], seed, nonce++);
 }
 
+/**************************************************************/
+/************ Vectors of polynomials of length K-1 **************/
+/**************************************************************/
+
+void polyveck1_uniform_eta(polyveck1 *v, const uint8_t seed[CRHBYTES], uint16_t nonce) {
+  unsigned int i;
+
+  for(i = 0; i < K-1; ++i)
+    poly_uniform_eta(&v->vec[i], seed, nonce++);
+}
+
+/**************************************************************/
+/************ Vectors of polynomials of length 1 **************/
+/**************************************************************/
+
+void polyvec1_uniform_eta(polyvec1 *v, const uint8_t seed[CRHBYTES], uint16_t nonce) {
+  unsigned int i;
+
+  for(i = 0; i < 1; ++i)
+    poly_uniform_eta(&v->vec[i], seed, nonce++);
+}
+
+
 /*************************************************
 * Name:        polyveck_reduce
 *

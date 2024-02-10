@@ -45,8 +45,25 @@ typedef struct {
   poly vec[K];
 } polyveck;
 
+/* Vectors of polynomials of length K-1 */
+typedef struct {
+  poly vec[K-1];
+} polyveck1;
+
+/* Vectors of polynomials of length 1 */
+typedef struct {
+  poly vec[1];
+} polyvec1;
+
+
 #define polyveck_uniform_eta DILITHIUM_NAMESPACE(polyveck_uniform_eta)
 void polyveck_uniform_eta(polyveck *v, const uint8_t seed[CRHBYTES], uint16_t nonce);
+
+#define polyveck1_uniform_eta DILITHIUM_NAMESPACE(polyveck1_uniform_eta)
+void polyveck1_uniform_eta(polyveck1 *v, const uint8_t seed[CRHBYTES], uint16_t nonce);
+
+#define polyvec1_uniform_eta DILITHIUM_NAMESPACE(polyvec1_uniform_eta)
+void polyvec1_uniform_eta(polyvec1 *v, const uint8_t seed[CRHBYTES], uint16_t nonce);
 
 #define polyveck_reduce DILITHIUM_NAMESPACE(polyveck_reduce)
 void polyveck_reduce(polyveck *v);
